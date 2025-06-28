@@ -9,3 +9,4 @@ export function closeModal() {
   refs.modalProduct.innerHTML = '';
   refs.modalWindow.classList.remove('modal--is-open');
 }
+
