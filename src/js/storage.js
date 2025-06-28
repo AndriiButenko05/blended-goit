@@ -5,8 +5,11 @@ export const key = 'cart';
 export let array = [];
 export const productKey = 'currentProductId';
 export const getPriceKey = `currentProductPrice`;
-export const priceKey = "price";
+export const priceKey = 'price';
 export const priceArr = [];
+export const wishlistKey = 'wishlist'
+export const wishlistArr = [];
+export const wishlistKeyCurrent = 'currentWishlist'
 
 export async function setProductId(id) {
   try {
@@ -18,6 +21,13 @@ export async function setProductId(id) {
 export async function setProductPrice(id) {
   try {
     localStorage.setItem(getPriceKey, id);
+  } catch (error) {
+    alert(error);
+  }
+}
+export async function setProductWishlist(id) {
+  try {
+    localStorage.setItem(wishlistKeyCurrent, id);
   } catch (error) {
     alert(error);
   }
@@ -38,19 +48,32 @@ export function getProductPrice() {
     return null;
   }
 }
+export function getProductWishlist() {
+  try {
+    return localStorage.getItem(wishlistKeyCurrent);
+  } catch (error) {
+    alert(error);
+    return null;
+  }
+}
 
 export function checkStorage(event) {
-    if (array.includes(localStorage.getItem(productKey))) {
-        event.textContent = `Remove from Cart`
-    } else {
-         event.textContent = `Add to Cart`
-    }
+  if (array.includes(localStorage.getItem(productKey))) {
+    event.textContent = `Remove from Cart`;
+  } else {
+    event.textContent = `Add to Cart`;
+  }
+}
+export function checkStorageWishlist(event) {
+  if (wishlistArr.includes(localStorage.getItem(wishlistKeyCurrent))) {
+    event.textContent = `Remove from Wishlist`;
+  } else {
+    event.textContent = `Add to Wishlist`;
+  }
 }
 export function updateCartCount() {
   try {
     const idArr = JSON.parse(localStorage.getItem(key)) || [];
-
-    // Обнуляем текущие значения
     array.length = 0;
     refs.cartCount.textContent = 0;
 
@@ -59,33 +82,27 @@ export function updateCartCount() {
     });
 
     refs.cartCount.textContent = array.length;
-
+    if (window.location.pathname.endsWith('cart.html')) {
+      refs.itemCountCart.textContent = array.length;
+    }
   } catch (error) {
-    alert(error)
+    alert(error);
   }
 }
 export function updatePriceCart() {
   try {
-    const idArr = JSON.parse(localStorage.getItem(priceKey)) || [];
+    const priceArray = JSON.parse(localStorage.getItem(priceKey)) || [];
     priceArr.length = 0;
-
-    // Начальная сумма
     let total = 0;
-
-    idArr.forEach(str => {
-      // Преобразуем строку вида "Price: 24999.99$" в число
-      const price = parseFloat(str.replace(/[^\d.]/g, ''));
-
-      if (!isNaN(price)) {
-        priceArr.push(price);       // Сохраняем чистое число
-        total += price;             // Прибавляем к сумме
-      }
+    refs.itemCostCart.textContent = '$0';
+    priceArray.forEach(item => {
+      const price = parseInt(item);
+      priceArr.push(price);
+      total += price;
     });
-
-    // Обновляем отображаемую цену
-    refs.itemCostCart.textContent =`$${total.toFixed(2)}`; 
+    refs.itemCostCart.textContent = `$${Number.parseFloat(total).toFixed(2)}`;
   } catch (error) {
-    alert(error)
+    alert(error);
   }
 }
 export function updatePrice() {
@@ -95,8 +112,20 @@ export function updatePrice() {
     idArr.forEach(item => {
       priceArr.push(item);
     });
-
   } catch (error) {
-    alert(error)
+    alert(error);
+  }
+}
+export function updateWishlistCount() {
+  try {
+    const idArr = JSON.parse(localStorage.getItem(wishlistKey)) || [];
+    wishlistArr.length = 0;
+    refs.wishlistCount.textContent = 0;
+    idArr.forEach(item => {
+      wishlistArr.push(item);
+    });
+    refs.wishlistCount.textContent = wishlistArr.length;
+  } catch (error) {
+    alert(error);
   }
 }

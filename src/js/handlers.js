@@ -6,7 +6,12 @@ import {
   searchProduct,
 } from './products-api.js';
 import refs from './refs.js';
-import { renderProducts, renderModal,renderProductsCart } from './render-function.js';
+import {
+  renderProducts,
+  renderModal,
+  renderProductsCart,
+  renderProductsSWishlist,
+} from './render-function.js';
 import { openModal, closeModal } from './modal.js';
 import {
   key,
@@ -17,12 +22,16 @@ import {
   updateCartCount,
   priceArr,
   priceKey,
-  updatePrice,
   setProductPrice,
-  getProductPrice
+  updatePriceCart,
+  getProductPrice,
+  wishlistArr,
+  wishlistKey,
+  getProductWishlist,
+  setProductWishlist,
+  checkStorageWishlist,
 } from './storage.js';
 
-let idProduct = null;
 export function handleCategoryClick(event) {
   if (!event.target.closest('button')) {
     return;
@@ -54,13 +63,20 @@ export function handleProductClick(event) {
   if (!event.target.closest('li')) {
     return;
   }
-  const productId = event.target.closest('li').dataset.id;
+  const productElement = event.target.closest('li');
+  const productId = productElement.dataset.id;
+  const productPrice =
+    productElement.querySelector('.products__price').textContent;
+  const formatPrice = parseFloat(productPrice.replace(/[^\d.]/g, ''));
   getProductById(productId)
     .then(res => {
       setProductId(productId);
+      setProductPrice(formatPrice);
+      setProductWishlist(productId);
       openModal();
       refs.modalProduct.insertAdjacentHTML('beforeend', renderModal(res.data));
       checkStorage(refs.addToCart);
+      checkStorageWishlist(refs.addToWishlist);
     })
     .catch(error => alert(error.message));
 }
@@ -71,7 +87,11 @@ export function handleCloseClick() {
 export function handleCloseClickCart() {
   refs.cartList.innerHTML = '';
   renderProductsCart();
-  refs.itemCountCart.textContent = refs.cartCount.textContent;
+  closeModal();
+}
+export function handleCloseClickWishlist() {
+  refs.cartList.innerHTML = '';
+  renderProductsSWishlist();
   closeModal();
 }
 
@@ -103,7 +123,7 @@ export function searchFrom(event) {
 }
 
 export function addToCartClick(event) {
-  const price = document.querySelector('.modal-product__price').textContent;
+  const price = parseInt(getProductPrice());
   const id = getProductId();
   if (!id) {
     alert('Error has occurred');
@@ -124,44 +144,83 @@ export function addToCartClick(event) {
       return;
     }
   } else {
-    event.target.textContent = "Remove from Cart";
+    event.target.textContent = 'Remove from Cart';
     priceArr.push(price);
     array.push(id);
     localStorage.setItem(key, JSON.stringify(array));
     localStorage.setItem(priceKey, JSON.stringify(priceArr));
-    refs.cartCount.textContent++
+    refs.cartCount.textContent++;
   }
 }
 export function removeFromCartClick(event) {
   const id = getProductId();
+  const price = parseInt(getProductPrice());
   if (!id) {
     alert('Error has occurred');
     return;
   }
-  const index = array.indexOf(id);
   if (event.target.textContent === `Remove from Cart`) {
     const index = array.indexOf(id);
-    const priceIndex = priceArr.indexOf(price);
-    if (priceIndex > -1) {
-      priceArr.splice(priceIndex, 1);
-      localStorage.setItem(priceKey, JSON.stringify(priceArr));
-    }
+    const indexPrice = priceArr.indexOf(price);
     if (index > -1) {
       array.splice(index, 1);
+      priceArr.splice(indexPrice, 1);
       localStorage.setItem(key, JSON.stringify(array));
+      localStorage.setItem(priceKey, JSON.stringify(priceArr));
       refs.cartCount.textContent--;
       event.target.textContent = 'Add to Cart';
-  
+      updatePriceCart();
       updateCartCount();
-      refs.itemCountCart.textContent = refs.cartCount.textContent
       return;
     }
   } else {
-    event.target.textContent = "Remove from Cart";
+    event.target.textContent = 'Remove from Cart';
+    priceArr.push(parseInt(price));
     array.push(id);
     localStorage.setItem(key, JSON.stringify(array));
+    localStorage.setItem(priceKey, JSON.stringify(priceArr));
     refs.cartCount.textContent++;
-    updateCartCount(); 
-    refs.itemCountCart.textContent = refs.cartCount.textContent
+    updateCartCount();
+    updatePriceCart();
+    refs.itemCountCart.textContent = refs.cartCount.textContent;
   }
+}
+
+export function addToWishlistClick(event) {
+  console.log(refs.wishlistCount.textContent);
+
+  const id = getProductWishlist();
+  if (!id) {
+    alert('Error has occurred');
+    return;
+  }
+  if (event.target.textContent === `Remove from Wishlist`) {
+    const index = wishlistArr.indexOf(id);
+    if (index > -1) {
+      wishlistArr.splice(index, 1);
+      localStorage.setItem(wishlistKey, JSON.stringify(wishlistArr));
+      refs.wishlistCount.textContent--;
+      event.target.textContent = 'Add to Wishlist';
+      return;
+    }
+  } else {
+    event.target.textContent = 'Remove from Wishlist';
+    wishlistArr.push(id);
+    localStorage.setItem(wishlistKey, JSON.stringify(wishlistArr));
+    refs.wishlistCount.textContent++;
+  }
+}
+export function scrollBtn() {
+  if (window.scrollY > 300) {
+    refs.scrollUpBtn.style.display = 'block';
+  } else {
+    refs.scrollUpBtn.style.display = 'none';
+  }
+}
+export function scrollUp() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+export function changeTheme() {
+  document.body.classList.toggle('body-dark-theme');
 }

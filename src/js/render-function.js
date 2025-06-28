@@ -1,6 +1,6 @@
 //Функцію для створення, рендеру або видалення розмітки
 import refs from './refs.js';
-import { key } from './storage.js';
+import { key, wishlistKey } from './storage.js';
 import { getProductById } from './products-api.js';
 export function renderCategories(arr) {
   return arr
@@ -53,6 +53,7 @@ export function renderModal(arr) {
 }
 export function renderProductsCart() {
   const productId = JSON.parse(localStorage.getItem(key));
+  if (!Array.isArray(productId) || productId.length === 0) return; // Prevent error if empty
   productId.forEach(element => {
     getProductById(element)
       .then(res => {
@@ -71,4 +72,15 @@ export function renderCart(arr) {
   <p class="products__price" data-price="${price}">Price: ${price}$</p>
 </li>
 `;
+}
+export function renderProductsSWishlist() {
+  const productId = JSON.parse(localStorage.getItem(wishlistKey));
+  if (!Array.isArray(productId) || productId.length === 0) return; // Prevent error if empty
+  productId.forEach(element => {
+    getProductById(element)
+      .then(res => {
+        refs.cartList.insertAdjacentHTML('beforeend', renderCart(res.data));
+      })
+      .catch(error => console.log(error.message));
+  });
 }

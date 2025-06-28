@@ -8,9 +8,17 @@ import {
   handleCloseClick,
   searchFrom,
   addToCartClick,
+  addToWishlistClick,
+  scrollBtn,
+  scrollUp,
+  changeTheme
 } from './js/handlers.js';
 import { clearSearch } from './js/helpers.js';
-import { key ,array,updateCartCount,updatePrice} from './js/storage.js';
+import {
+  updateCartCount,
+  updatePrice,
+  updateWishlistCount,
+} from './js/storage.js';
 
 categoryListApi()
   .then(res => {
@@ -31,7 +39,9 @@ productsApi()
   })
   .catch(error => alert(error.message));
 
-updateCartCount()
+updateCartCount();
+
+updateWishlistCount();
 
 updatePrice();
 
@@ -45,6 +55,12 @@ refs.clearBtn.addEventListener('click', clearSearch);
 
 refs.searchForm.addEventListener('submit', searchFrom);
 
-refs.addToCart.addEventListener("click", addToCartClick);
+refs.addToCart.addEventListener('click', addToCartClick);
 
+refs.addToWishlist.addEventListener('click', addToWishlistClick);
 
+window.addEventListener('scroll', scrollBtn)
+
+refs.scrollUpBtn.addEventListener('click', scrollUp);
+
+refs.changeTheme.addEventListener('click', changeTheme);

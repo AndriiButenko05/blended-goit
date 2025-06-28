@@ -54,7 +54,9 @@
                 </li>
                 <li class="cart-summary__item">
                   <span class="cart-summary__label">Total:</span>
-                  <span class="cart-summary__value" data-price>$0</span>
+                  <span class="cart-summary__value price_total" data-price
+                    >$0</span
+                  >
                 </li>
                 <li class="cart-summary__item">
                   <span class="cart-summary__label">Shipping:</span>
@@ -74,5 +76,19 @@
     </section>
     <load src="./partials/modal.html" />
     <script type="module" src="./cart.js"></script>
+    <button
+      id="scrollUpBtn"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        z-index: 1000;
+        padding: 10px 20px;
+        font-size: 18px;
+      "
+    >
+      Scroll UP
+    </button>
   </body>
 </html>

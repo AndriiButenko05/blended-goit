@@ -14,6 +14,10 @@ const refs = {
   cartCount: document.querySelector(".nav__count"),
   cartList: document.querySelector(".products"),
   itemCountCart: document.querySelector(".cart-summary__value"),
-  itemCostCart: document.querySelector(`[data-price]`)
+  itemCostCart: document.querySelector(`.price_total`),
+  addToWishlist: document.querySelector('.modal-product__btn--wishlist'),
+  wishlistCount: document.querySelector("[data-wishlist-count]"),
+  scrollUpBtn: document.getElementById('scrollUpBtn'),
+  changeTheme: document.querySelector('.switch')
 };
 export default refs;

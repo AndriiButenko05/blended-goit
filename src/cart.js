@@ -1,43 +1,46 @@
 //Логіка сторінки Cart
-import {
-  categoryListApi,
-  productsApi,
-  getProductById,
-} from './js/products-api.js';
+
 import refs from './js/refs.js';
+import { renderProductsCart } from './js/render-function.js';
 import {
-  renderCategories,
-  renderProducts,
-    renderCart,
-    renderProductsCart
-} from './js/render-function.js';
-import {
-  handleCategoryClick,
   handleProductClick,
-  handleCloseClick,
   searchFrom,
-    addToCartClick,
-    removeFromCartClick,
-    handleCloseClickCart
+  removeFromCartClick,
+  handleCloseClickCart,
+  addToWishlistClick,
+  scrollBtn,
+  scrollUp,
+  changeTheme
 } from './js/handlers.js';
 import { clearSearch } from './js/helpers.js';
-import { key, array, updateCartCount,updatePriceCart } from './js/storage.js';
+import {
+  updateCartCount,
+  updatePriceCart,
+  updateWishlistCount,
+} from './js/storage.js';
 
 updateCartCount();
 
 updatePriceCart();
 
-renderProductsCart();
+updateWishlistCount();
 
-refs.itemCountCart.textContent = refs.cartCount.textContent;
+renderProductsCart();
 
 refs.productList.addEventListener('click', handleProductClick);
 
 refs.modalClose.addEventListener('click', handleCloseClickCart);
 
+refs.clearBtn.addEventListener('click', clearSearch);
+
 refs.addToCart.addEventListener('click', removeFromCartClick);
 
 refs.searchForm.addEventListener('submit', searchFrom);
 
+refs.addToWishlist.addEventListener('click', addToWishlistClick);
 
+window.addEventListener('scroll', scrollBtn)
 
+refs.scrollUpBtn.addEventListener('click', scrollUp);
+
+refs.changeTheme.addEventListener('click', changeTheme);
