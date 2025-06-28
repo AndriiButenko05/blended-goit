@@ -1,0 +1,2 @@
+import"./assets/styles-BK7AYJoX.js";import{u as e,i as r,j as a,r as t,e as s,k as o,l as d,s as i}from"./assets/handlers-DC9O_HoL.js";import"./assets/vendor-N5iQpiFS.js";e();r();a();t.itemCountCart.textContent=t.cartCount.textContent;t.productList.addEventListener("click",s);t.modalClose.addEventListener("click",o);t.addToCart.addEventListener("click",d);t.searchForm.addEventListener("submit",i);
+//# sourceMappingURL=cart.js.map
