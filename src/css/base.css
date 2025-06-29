@@ -152,9 +152,31 @@
 .body-dark-theme {
   background: linear-gradient(135deg, #000 60%, #ff9800 100%);
   color: #fff;
+  transition: background 0.4s;
 }
 
-.body-light-theme {
-  color: #242424;
-  background-color: rgba(255, 255, 255, 0.87);
+.header {
+  background: #fff;
+  color: #222;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* Dark theme header style */
+.body-dark-theme .header {
+  background: linear-gradient(90deg, #ff9800 60%, #b35400 100%);
+  color: #fff;
+}
+
+/* Optional: style nav links for dark theme */
+.body-dark-theme .header .nav__link {
+  color: #fff;
+}
+.body-dark-theme .header .nav__link:hover,
+.body-dark-theme .header .nav__link:focus {
+  color: #ffd180;
+}
+
+/* Optional: style logo for dark theme */
+.body-dark-theme .header .logo__icon {
+  fill: #fff;
 }

@@ -10,6 +10,7 @@ export const priceArr = [];
 export const wishlistKey = 'wishlist'
 export const wishlistArr = [];
 export const wishlistKeyCurrent = 'currentWishlist'
+export const themeKey =`currentTheme`
 
 export async function setProductId(id) {
   try {
@@ -127,5 +128,15 @@ export function updateWishlistCount() {
     refs.wishlistCount.textContent = wishlistArr.length;
   } catch (error) {
     alert(error);
+  }
+}
+export function applySavedTheme() {
+  const savedTheme = localStorage.getItem(themeKey);
+  if (savedTheme === 'dark') {
+    document.body.classList.add('body-dark-theme');
+    if (refs.changeTheme) refs.changeTheme.checked = true; // Move switch to right
+  } else {
+    document.body.classList.remove('body-dark-theme');
+    if (refs.changeTheme) refs.changeTheme.checked = false; // Move switch to left
   }
 }

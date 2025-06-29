@@ -18,6 +18,6 @@ const refs = {
   addToWishlist: document.querySelector('.modal-product__btn--wishlist'),
   wishlistCount: document.querySelector("[data-wishlist-count]"),
   scrollUpBtn: document.getElementById('scrollUpBtn'),
-  changeTheme: document.querySelector('.switch')
+  changeTheme: document.querySelector('.switch .input')
 };
 export default refs;

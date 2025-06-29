@@ -1,5 +1,4 @@
 //Логіка сторінки Cart
-
 import refs from './js/refs.js';
 import { renderProductsCart } from './js/render-function.js';
 import {
@@ -10,14 +9,17 @@ import {
   addToWishlistClick,
   scrollBtn,
   scrollUp,
-  changeTheme
+  changeTheme,
 } from './js/handlers.js';
 import { clearSearch } from './js/helpers.js';
 import {
   updateCartCount,
   updatePriceCart,
   updateWishlistCount,
+  applySavedTheme,
 } from './js/storage.js';
+
+applySavedTheme();
 
 updateCartCount();
 
@@ -39,8 +41,8 @@ refs.searchForm.addEventListener('submit', searchFrom);
 
 refs.addToWishlist.addEventListener('click', addToWishlistClick);
 
-window.addEventListener('scroll', scrollBtn)
+window.addEventListener('scroll', scrollBtn);
 
 refs.scrollUpBtn.addEventListener('click', scrollUp);
 
-refs.changeTheme.addEventListener('click', changeTheme);
+refs.changeTheme.addEventListener('change', changeTheme);

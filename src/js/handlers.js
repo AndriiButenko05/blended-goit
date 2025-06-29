@@ -1,11 +1,11 @@
 // Функції, які передаються колбеками в addEventListners
 import {
   getCategoryApi,
-  productsApi,
   getProductById,
   searchProduct,
 } from './products-api.js';
 import refs from './refs.js';
+import { displayProducts } from './helpers.js';
 import {
   renderProducts,
   renderModal,
@@ -30,6 +30,7 @@ import {
   getProductWishlist,
   setProductWishlist,
   checkStorageWishlist,
+  themeKey,
 } from './storage.js';
 
 export function handleCategoryClick(event) {
@@ -41,14 +42,7 @@ export function handleCategoryClick(event) {
   event.target.classList.add('categories__btn--active');
 
   if (event.target.textContent === 'All') {
-    productsApi()
-      .then(res => {
-        refs.productList.insertAdjacentHTML(
-          'beforeend',
-          renderProducts(res.data.products)
-        );
-      })
-      .catch(error => alert(error.message));
+    displayProducts();
   }
 
   getCategoryApi(event.target.textContent)
@@ -97,12 +91,18 @@ export function handleCloseClickWishlist() {
 
 export function searchFrom(event) {
   event.preventDefault();
-  refs.productList.innerHTML = '';
-  const buttons = document.querySelectorAll('.categories__btn');
-  buttons.forEach(btn => btn.classList.remove('categories__btn--active'));
   if (refs.input.value.trim() === '') {
     alert('Please write correct product name');
     refs.searchForm.reset();
+    return;
+  }
+  const query = refs.input.value.trim();
+  refs.productList.innerHTML = '';
+  const buttons = document.querySelectorAll('.categories__btn');
+  buttons.forEach(btn => btn.classList.remove('categories__btn--active'));
+  if (!window.location.pathname.endsWith('index.html')) {
+    localStorage.setItem('pendingSearch', query);
+    window.location.href = 'index.html';
     return;
   }
   searchProduct(refs.input.value)
@@ -120,6 +120,32 @@ export function searchFrom(event) {
     })
     .catch(error => alert(error.message));
   refs.searchForm.reset();
+}
+
+export function searchFormOnMain() {
+  const pendingSearch = localStorage.getItem('pendingSearch');
+  if (pendingSearch) {
+    refs.input.value = pendingSearch;
+    localStorage.removeItem('pendingSearch');
+    refs.productList.innerHTML = '';
+    searchProduct(pendingSearch)
+      .then(res => {
+        if (res.data.products.length === 0) {
+          refs.notFound.classList.add('not-found--visible');
+          refs.searchForm.reset();
+          return;
+        }
+        refs.productList.insertAdjacentHTML(
+          'beforeend',
+          renderProducts(res.data.products)
+        );
+        refs.notFound.classList.remove('not-found--visible');
+      })
+      .catch(error => alert(error.message));
+    refs.searchForm.reset();
+  } else {
+    displayProducts(); // Only show all products if no search
+  }
 }
 
 export function addToCartClick(event) {
@@ -222,5 +248,11 @@ export function scrollUp() {
 }
 
 export function changeTheme() {
-  document.body.classList.toggle('body-dark-theme');
+  if (refs.changeTheme.checked) {
+    document.body.classList.add('body-dark-theme');
+    localStorage.setItem(themeKey, 'dark');
+  } else {
+    document.body.classList.remove('body-dark-theme');
+    localStorage.setItem(themeKey, 'light');
+  }
 }
